@@ -16,6 +16,7 @@
 			<url-pattern>/odata.srv/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
+			<role-name>Manager</role-name>
 		</auth-constraint>
 	</security-constraint>
 	<security-role>

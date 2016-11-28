@@ -6,18 +6,39 @@
 	<version>0.0.1</version>
 	<packaging>war</packaging>
 
+	<name>FIS Votes - Sample HCP Application</name>
+
+	<organization>
+		<name>FIS Informationssysteme und Consulting GmbH</name>
+		<url>http://www.fis-gmbh.de</url>
+	</organization>
+
+	<developers>
+		<developer>
+			<name>Stefan Seufert</name>
+			<email>s.seufert@fis-gmbh.de</email>
+			<url>http://hana.ondemand.com</url>
+			<organization>FIS Informationssysteme und Consulting GmbH</organization>
+			<organizationUrl>http://www.fis-gmbh.de</organizationUrl>
+		</developer>
+	</developers>
+
 	<properties>
 		<jdk.version>1.8</jdk.version>
-		<sap.hcp.sdk.version>1.103.15.2</sap.hcp.sdk.version>
-		<sap.hcp.runtime.version>1.103</sap.hcp.runtime.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<sap.hcp.runtime.version>1.103</sap.hcp.runtime.version>
+		<sap.cloud.application>votessrv</sap.cloud.application>
+		
+		<!--  
+		<sap.cloud.datasource>DefaultDB</sap.cloud.datasource>
 		<sap.cloud.host>hana.ondemand.com</sap.cloud.host>
 		<sap.cloud.account>a86611c52</sap.cloud.account>
-		<sap.cloud.application>votessrv</sap.cloud.application>
-		<sap.cloud.datasource>DefaultDB</sap.cloud.datasource>
-		<sap.cloud.DBSchema>votesSrv</sap.cloud.DBSchema>
+		<sap.cloud.DBSchema>votesSrv</sap.cloud.DBSchema> 
 		<proxy.host>proxy</proxy.host>
-		<proxy.port>8080</proxy.port>
+		<proxy.port>8080</proxy.port> 
+		-->
+		
+		<sap.hcp.sdk.version>1.103.15.2</sap.hcp.sdk.version>
 		<junit-version>4.12</junit-version>
 		<org.hamcrest-verion>1.3</org.hamcrest-verion>
 		<org.mockito-version>2.2.11</org.mockito-version>
