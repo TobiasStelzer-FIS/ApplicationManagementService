@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.fis_gmbh.tgh</groupId>
 	<artifactId>votes</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.3</version>
 	<packaging>war</packaging>
 
 	<name>FIS Votes - Sample HCP Application</name>
@@ -28,12 +28,14 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sap.hcp.runtime.version>1.103</sap.hcp.runtime.version>
 		<sap.cloud.application>votessrv</sap.cloud.application>
-		
+
+		   
 		<!--  
 		<sap.cloud.datasource>DefaultDB</sap.cloud.datasource>
+		<sap.cloud.DBSchema>VOTES_SRV</sap.cloud.DBSchema> 
 		<sap.cloud.host>hana.ondemand.com</sap.cloud.host>
 		<sap.cloud.account>a86611c52</sap.cloud.account>
-		<sap.cloud.DBSchema>votesSrv</sap.cloud.DBSchema> 
+
 		<proxy.host>proxy</proxy.host>
 		<proxy.port>8080</proxy.port> 
 		-->
