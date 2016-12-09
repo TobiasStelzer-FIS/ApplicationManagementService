@@ -1,4 +1,4 @@
-package de.fisgmbh.tgh.votes.odata;
+package de.fisgmbh.tgh.applman.odata;
 
 import java.util.Map;
 
@@ -28,26 +28,17 @@ public abstract class EdmTypeEntityJPAStandard extends FisEdmTypeEntity {
 
 	@Override
 	public boolean havePermissionToCreateEntity(PostUriInfo uriInfo, Map<String, Object> json) {
-		if (((CustomODataRequestContext)this.getODataRequestContext()).isManager()){
-			return true;
-		}
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean havePermissionToUpdateEntity(PutMergePatchUriInfo uriInfo, Map<String, Object> json) {
-		if (((CustomODataRequestContext)this.getODataRequestContext()).isManager()){
-			return true;
-		}
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean havePermissionToDeleteEntity(DeleteUriInfo uriInfo) {
-		if (((CustomODataRequestContext)this.getODataRequestContext()).isManager()){
-			return true;
-		}
-		return false;
+		return true;
 	}
 
 }

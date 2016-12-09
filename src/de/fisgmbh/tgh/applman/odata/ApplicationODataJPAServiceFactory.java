@@ -1,4 +1,4 @@
-package de.fisgmbh.tgh.votes.odata;
+package de.fisgmbh.tgh.applman.odata;
 
 import org.apache.olingo.odata2.api.processor.ODataSingleProcessor;
 import org.apache.olingo.odata2.jpa.processor.api.ODataJPAContext;
@@ -9,7 +9,7 @@ import de.fisgmbh.tgh.odata.FisODataApplication;
 
 public class ApplicationODataJPAServiceFactory extends FisODataApplication {
 
-	private static final String PUNIT_NAME = "VotesSrv";
+	private static final String PUNIT_NAME = "ApplmanSrv";
 
 	@Override
 	protected FisJPAEdmExtension createJPAExtension(ODataJPAContext oDataJPAContext, TenantContext tenantctx) {

@@ -3,13 +3,14 @@
 	xmlns="http://java.sun.com/xml/ns/javaee"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	id="WebApp_ID" version="3.0">
-	<display-name>VotesService</display-name>
+	<display-name>ApplmanService</display-name>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 	<login-config>
 		<auth-method>FORM</auth-method>
 	</login-config>
+<!--
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>OData Service</web-resource-name>
@@ -23,7 +24,7 @@
 		<description>Manager</description>
 		<role-name>Manager</role-name>
 	</security-role>
-
+-->
 	<servlet>
 		<servlet-name>JPARefScenarioServlet</servlet-name>
 		<servlet-class>org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet</servlet-class>
@@ -33,7 +34,7 @@
 		</init-param>
 		<init-param>
 			<param-name>org.apache.olingo.odata2.service.factory</param-name>
-			<param-value>de.fisgmbh.tgh.votes.odata.ApplicationODataJPAServiceFactory</param-value>
+			<param-value>de.fisgmbh.tgh.applman.odata.ApplicationODataJPAServiceFactory</param-value>
 		</init-param>
 		<init-param>
 			<param-name>jersey.config.server.tracing.type</param-name>

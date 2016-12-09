@@ -1,4 +1,4 @@
-package de.fisgmbh.tgh.votes.model;
+package de.fisgmbh.tgh.applman.model;
 
 import javax.persistence.EntityManager;
 
