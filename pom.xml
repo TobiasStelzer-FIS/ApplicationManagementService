@@ -40,7 +40,7 @@
 		<proxy.port>8080</proxy.port> 
 		-->
 		
-		<sap.hcp.sdk.version>1.103.15.2</sap.hcp.sdk.version>
+		<sap.hcp.sdk.version>3.18.10</sap.hcp.sdk.version>
 		<junit-version>4.12</junit-version>
 		<org.hamcrest-verion>1.3</org.hamcrest-verion>
 		<org.mockito-version>2.2.11</org.mockito-version>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="votes-0.0.1">
+    <wb-module deploy-name="votes-0.0.3">
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <dependent-module archiveName="HCP-EasyOData-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/HCP-EasyOData/HCP-EasyOData">
+        <dependent-module archiveName="HCP-EasyOData-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Fis-TGH-HCP-EasyOData/Fis-TGH-HCP-EasyOData">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="HCP-DataAccessObjects-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/HCP-DataAccessObjects/HCP-DataAccessObjects">
+        <dependent-module archiveName="HCP-DataAccessObjects-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Fis-TGH-HCP-DataAccessObjects/Fis-TGH-HCP-DataAccessObjects">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="java-output-path" value="/VotesService/build/classes"/>
