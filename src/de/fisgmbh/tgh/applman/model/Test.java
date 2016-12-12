@@ -23,9 +23,9 @@ public class Test extends CustomJpaObject implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/* Customer ids are generated within a number range starting with 1 */
-//	@TableGenerator(name = "TestGenerator", table = "APPLMAN_ID_GENERATOR", pkColumnName = "GENERATOR_NAME", valueColumnName = "GENERATOR_VALUE", pkColumnValue = "Test", initialValue = 100000000, allocationSize = 100)
 	@Id
-//	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TestGenerator")
+	@TableGenerator(name = "TestGenerator", table = "APPLMAN_ID_GENERATOR", pkColumnName = "GENERATOR_NAME", valueColumnName = "GENERATOR_VALUE", pkColumnValue = "Test", initialValue = 100000000, allocationSize = 100)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TestGenerator")
 	@Column(name="TEST_ID", nullable=false, length=10)
 	private String testId;
 	

@@ -6,9 +6,12 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 @Entity
 @Table(name="STATUS")
@@ -17,6 +20,8 @@ public class Status extends CustomJpaObject implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@TableGenerator(name = "StatusGenerator", table = "APPLMAN_ID_GENERATOR", pkColumnName = "GENERATOR_NAME", valueColumnName = "GENERATOR_VALUE", pkColumnValue = "Status", initialValue = 1, allocationSize = 1000)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "StatusGenerator")
 	@Column(name="STATUS_ID", nullable=false, length=10)
 	private String statusId;
 	

@@ -5,9 +5,13 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -15,6 +19,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
@@ -28,6 +33,8 @@ public class Application extends CustomJpaObject implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
+	@TableGenerator(name = "ApplicationGenerator", table = "APPLMAN_ID_GENERATOR", pkColumnName = "GENERATOR_NAME", valueColumnName = "GENERATOR_VALUE", pkColumnValue = "Application", initialValue = 1, allocationSize = 1000)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "ApplicationGenerator")
 	@Column(name="APPLICATION_ID", nullable=false, length=10)
 	private String applicationId;
 	
@@ -37,18 +44,18 @@ public class Application extends CustomJpaObject implements Serializable {
 	@Column(name="ENTERED_ON", nullable=false)
 	private Date enteredOn;
 	
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinColumn(name = "APPLICANT_ID", referencedColumnName = "APPLICANT_ID")
 	private Applicant applicant;
 	
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinColumn(name = "STATUS_ID", referencedColumnName = "STATUS_ID")
 	private Status status;
 	
-	@OneToMany(mappedBy="application")
+	@OneToMany(mappedBy="application", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private List<Comment> comments;
 	
-	@OneToMany(mappedBy="application")
+	@OneToMany(mappedBy="application", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private List<Document> documents;
 	
 	@ManyToMany
@@ -100,6 +107,7 @@ public class Application extends CustomJpaObject implements Serializable {
 	}
 
 	public void setApplicant(Applicant applicant) {
+		applicant.addApplication(this);
 		this.applicant = applicant;
 	}
 

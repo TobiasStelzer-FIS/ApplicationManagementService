@@ -5,13 +5,17 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
@@ -25,6 +29,8 @@ public class Applicant extends CustomJpaObject implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@TableGenerator(name = "ApplicantGenerator", table = "APPLMAN_ID_GENERATOR", pkColumnName = "GENERATOR_NAME", valueColumnName = "GENERATOR_VALUE", pkColumnValue = "Applicant", initialValue = 1, allocationSize = 1000)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "ApplicantGenerator")
 	@Column(name="APPLICANT_ID", nullable=false, length=10)
 	private String applicantId;
 	
@@ -64,7 +70,7 @@ public class Applicant extends CustomJpaObject implements Serializable {
 	@Column(name="EMAIL", length=80, nullable=true)
 	private String email;
 	
-	@OneToMany(mappedBy="applicant")
+	@OneToMany(mappedBy="applicant", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private List<Application> applications;
 	
 	public Applicant() {
@@ -185,5 +191,7 @@ public class Applicant extends CustomJpaObject implements Serializable {
 		this.applications = applications;
 	}
 	
-	
+	public void addApplication(Application application) {
+		this.applications.add(application);
+	}
 }
