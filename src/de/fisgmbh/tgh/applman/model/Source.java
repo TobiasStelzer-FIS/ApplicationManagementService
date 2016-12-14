@@ -10,7 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -31,15 +32,42 @@ public class Source extends CustomJpaObject implements Serializable {
 	@Column(name="SOURCE_ID", nullable=false, length=10)
 	private String sourceId;
 	
-	@Column(name="NAME", nullable=false, length=80)
+	@Column(name="NAME", nullable=false, length=150)
 	private String name;
 	
-	@ManyToMany(mappedBy="sources")
-	private List<Application> applications;
+	@OneToMany(mappedBy="source")
+	@JoinColumn(updatable = false, insertable = false)
+	private List<LinkSourceApplication> applications;
 	
 	public Source() {
 		super();
 		
-		applications = new ArrayList<Application>();
+		applications = new ArrayList<LinkSourceApplication>();
 	}
+
+	public String getSourceId() {
+		return sourceId;
+	}
+
+	public void setSourceId(String sourceId) {
+		this.sourceId = sourceId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public List<LinkSourceApplication> getApplications() {
+		return applications;
+	}
+
+	public void setApplications(List<LinkSourceApplication> applications) {
+		this.applications = applications;
+	}
+	
+	
 }

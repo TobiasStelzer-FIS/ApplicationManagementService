@@ -14,8 +14,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -31,12 +29,19 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 public class Application extends CustomJpaObject implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+//	private static List<Application> applications;
 	
 	@Id
 	@TableGenerator(name = "ApplicationGenerator", table = "APPLMAN_ID_GENERATOR", pkColumnName = "GENERATOR_NAME", valueColumnName = "GENERATOR_VALUE", pkColumnValue = "Application", initialValue = 1, allocationSize = 1000)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "ApplicationGenerator")
 	@Column(name="APPLICATION_ID", nullable=false, length=10)
 	private String applicationId;
+
+	@Column(name="APPLICANT_ID", length=10, nullable=false)
+	private String applicantId;
+
+	@Column(name="STATUS_ID", length=10, nullable=true)
+	private String statusId;
 	
 	@Column(name="ENTERED_BY", length=100, nullable=false)
 	private String enteredBy;
@@ -45,11 +50,11 @@ public class Application extends CustomJpaObject implements Serializable {
 	private Date enteredOn;
 	
 	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-	@JoinColumn(name = "APPLICANT_ID", referencedColumnName = "APPLICANT_ID")
+	@JoinColumn(name = "APPLICANT_ID", referencedColumnName = "APPLICANT_ID", updatable = false, insertable = false)
 	private Applicant applicant;
 	
 	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-	@JoinColumn(name = "STATUS_ID", referencedColumnName = "STATUS_ID")
+	@JoinColumn(name = "STATUS_ID", referencedColumnName = "STATUS_ID", updatable = false, insertable = false)
 	private Status status;
 	
 	@OneToMany(mappedBy="application", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
@@ -57,25 +62,23 @@ public class Application extends CustomJpaObject implements Serializable {
 	
 	@OneToMany(mappedBy="application", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private List<Document> documents;
+		
+	@OneToMany(mappedBy="application", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@JoinColumn(updatable = false, insertable = false)
+	private List<LinkPositionApplication> positions;
 	
-	@ManyToMany
-	@JoinTable(name ="LINK_APPLICATION_POSITION",
-		    joinColumns=@JoinColumn(name="APPLICATION_ID", referencedColumnName="APPLICATION_ID", updatable=false, insertable=false),
-		    inverseJoinColumns=@JoinColumn(name="POSITION_ID", referencedColumnName="POSITION_ID", updatable=false, insertable=false))
-	private List<Position> positions;
-	
-	@ManyToMany
-	@JoinTable(name ="LINK_APPLICATION_SOURCE",
-		    joinColumns=@JoinColumn(name="APPLICATION_ID"),
-		    inverseJoinColumns=@JoinColumn(name="SOURCE_ID"))
-	private List<Source> sources;
+	@OneToMany(mappedBy="application", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@JoinColumn(updatable = false, insertable = false)
+	private List<LinkSourceApplication> sources;
 	
 	public Application() {
 		super();
 		
-		positions = new ArrayList<Position>();
+		positions = new ArrayList<LinkPositionApplication>();
+		sources = new ArrayList<LinkSourceApplication>();
 		comments = new ArrayList<Comment>();
 		documents = new ArrayList<Document>();
+//		Application.addApplication(this);
 	}
 
 	public String getApplicationId() {
@@ -84,6 +87,30 @@ public class Application extends CustomJpaObject implements Serializable {
 
 	public void setApplicationId(String applicationId) {
 		this.applicationId = applicationId;
+	}
+
+	public String getApplicantId() {
+		return applicantId;
+	}
+
+	public void setApplicantId(String applicantId) {
+		this.applicantId = applicantId;
+//		for (Applicant applicant : Applicant.getApplicants()) {
+//			if (applicant.getApplicantId() == null)
+//				continue;
+//			
+//			if (applicant.getApplicantId().equals(applicantId)) {
+//				this.setApplicant(applicant);
+//			}
+//		}
+	}
+
+	public String getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(String statusId) {
+		this.statusId = statusId;
 	}
 
 	public String getEnteredBy() {
@@ -135,21 +162,35 @@ public class Application extends CustomJpaObject implements Serializable {
 		this.documents = documents;
 	}
 
-	public List<Position> getPositions() {
+	public List<LinkPositionApplication> getPositions() {
 		return positions;
 	}
 
-	public void setPositions(List<Position> positions) {
+	public void setPositions(List<LinkPositionApplication> positions) {
 		this.positions = positions;
 	}
 
-	public List<Source> getSources() {
+	public List<LinkSourceApplication> getSources() {
 		return sources;
 	}
 
-	public void setSources(List<Source> sources) {
+	public void setSources(List<LinkSourceApplication> sources) {
 		this.sources = sources;
 	}
 	
-	
+	// Convenience Methods
+//	public static List<Application> getApplications() {
+//		if (Application.applications == null) {
+//			Application.applications = new ArrayList<Application>();
+//		}
+//		return Application.applications;
+//	}
+//	
+//	private static void addApplication(Application application) {
+//		if (Application.applications == null) {
+//			Application.applications = new ArrayList<Application>();
+//		}
+//		Application.applications.add(application);
+//	}
+
 }

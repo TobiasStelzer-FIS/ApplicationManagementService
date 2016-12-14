@@ -10,7 +10,7 @@ public class EdmTypeEntityPosition extends EdmTypeEntityJPAStandard {
 
 	static {
 		customPropertyNames = new HashMap<>();
-		customPropertyNames.put("ApplicationDetails", "Applications");
+		customPropertyNames.put("LinkPositionApplicationDetails", "Applications");
 	}
 	
 	public EdmTypeEntityPosition() {

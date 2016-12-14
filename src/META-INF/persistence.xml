@@ -16,6 +16,8 @@
 		<class>de.fisgmbh.tgh.applman.model.Source</class>
 		<class>de.fisgmbh.tgh.applman.model.Status</class>
 		<class>de.fisgmbh.tgh.applman.model.Test</class>
+		<class>de.fisgmbh.tgh.applman.model.LinkPositionApplication</class>
+		<class>de.fisgmbh.tgh.applman.model.LinkSourceApplication</class>
 		<properties>
 			<property name="eclipselink.ddl-generation" value="create-tables" />	<!-- 'drop-and-' used for testing purposes -->
 			<property name="eclipselink.logging.level" value="SEVERE" />

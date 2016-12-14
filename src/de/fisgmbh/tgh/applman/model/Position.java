@@ -10,7 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -31,16 +32,41 @@ public class Position extends CustomJpaObject implements Serializable {
 	@Column(name="POSITION_ID", nullable=false, length=10)
 	private String positionId;
 	
-	@Column(name="NAME", nullable=false, length=80)
+	@Column(name="NAME", nullable=false, length=150)
 	private String name;
 
-	@ManyToMany(mappedBy="positions")
-	private List<Application> applications;
+	@OneToMany(mappedBy="position")
+	@JoinColumn(updatable = false, insertable = false)
+	private List<LinkPositionApplication> applications;
 	
 	public Position() {
 		super();
 		
-		applications = new ArrayList<Application>();
+		applications = new ArrayList<LinkPositionApplication>();
+	}
+
+	public String getPositionId() {
+		return positionId;
+	}
+
+	public void setPositionId(String positionId) {
+		this.positionId = positionId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public List<LinkPositionApplication> getApplications() {
+		return applications;
+	}
+
+	public void setApplications(List<LinkPositionApplication> applications) {
+		this.applications = applications;
 	}
 	
 }

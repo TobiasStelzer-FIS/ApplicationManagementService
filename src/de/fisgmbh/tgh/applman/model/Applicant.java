@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -27,7 +28,8 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 public class Applicant extends CustomJpaObject implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+//	private static List<Applicant> applicants;
+	
 	@Id
 	@TableGenerator(name = "ApplicantGenerator", table = "APPLMAN_ID_GENERATOR", pkColumnName = "GENERATOR_NAME", valueColumnName = "GENERATOR_VALUE", pkColumnValue = "Applicant", initialValue = 1, allocationSize = 1000)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "ApplicantGenerator")
@@ -71,12 +73,15 @@ public class Applicant extends CustomJpaObject implements Serializable {
 	private String email;
 	
 	@OneToMany(mappedBy="applicant", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@JoinColumn(updatable = false, insertable = false)
 	private List<Application> applications;
 	
 	public Applicant() {
 		super();
 		
 		applications = new ArrayList<Application>();
+		
+//		Applicant.addApplicant(this);
 	}
 
 	public String getApplicantId() {
@@ -191,7 +196,22 @@ public class Applicant extends CustomJpaObject implements Serializable {
 		this.applications = applications;
 	}
 	
+	// Convenience Methods
 	public void addApplication(Application application) {
-		this.applications.add(application);
+		applications.add(application);
 	}
+	
+//	public static List<Applicant> getApplicants() {
+//		if (Applicant.applicants == null) {
+//			Applicant.applicants = new ArrayList<Applicant>();
+//		}
+//		return Applicant.applicants;
+//	}
+//
+//	private static void addApplicant(Applicant applicant) {
+//		if (Applicant.applicants == null) {
+//			Applicant.applicants = new ArrayList<Applicant>();
+//		}
+//		Applicant.applicants.add(applicant);
+//	}
 }
