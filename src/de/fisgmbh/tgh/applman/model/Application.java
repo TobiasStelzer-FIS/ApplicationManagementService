@@ -29,7 +29,6 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 public class Application extends CustomJpaObject implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-//	private static List<Application> applications;
 	
 	@Id
 	@TableGenerator(name = "ApplicationGenerator", table = "APPLMAN_ID_GENERATOR", pkColumnName = "GENERATOR_NAME", valueColumnName = "GENERATOR_VALUE", pkColumnValue = "Application", initialValue = 1, allocationSize = 1000)
@@ -37,8 +36,8 @@ public class Application extends CustomJpaObject implements Serializable {
 	@Column(name="APPLICATION_ID", nullable=false, length=10)
 	private String applicationId;
 
-	@Column(name="APPLICANT_ID", length=10, nullable=false)
-	private String applicantId;
+//	@Column(name="APPLICANT_ID", length=10, nullable=false)
+//	private String applicantId;
 
 	@Column(name="STATUS_ID", length=10, nullable=true)
 	private String statusId;
@@ -49,8 +48,8 @@ public class Application extends CustomJpaObject implements Serializable {
 	@Column(name="ENTERED_ON", nullable=false)
 	private Date enteredOn;
 	
-	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-	@JoinColumn(name = "APPLICANT_ID", referencedColumnName = "APPLICANT_ID", updatable = false, insertable = false)
+	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL, targetEntity=Applicant.class)
+	@JoinColumn(name = "APPLICANT_ID", referencedColumnName = "APPLICANT_ID")
 	private Applicant applicant;
 	
 	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
@@ -78,7 +77,6 @@ public class Application extends CustomJpaObject implements Serializable {
 		sources = new ArrayList<LinkSourceApplication>();
 		comments = new ArrayList<Comment>();
 		documents = new ArrayList<Document>();
-//		Application.addApplication(this);
 	}
 
 	public String getApplicationId() {
@@ -87,22 +85,6 @@ public class Application extends CustomJpaObject implements Serializable {
 
 	public void setApplicationId(String applicationId) {
 		this.applicationId = applicationId;
-	}
-
-	public String getApplicantId() {
-		return applicantId;
-	}
-
-	public void setApplicantId(String applicantId) {
-		this.applicantId = applicantId;
-//		for (Applicant applicant : Applicant.getApplicants()) {
-//			if (applicant.getApplicantId() == null)
-//				continue;
-//			
-//			if (applicant.getApplicantId().equals(applicantId)) {
-//				this.setApplicant(applicant);
-//			}
-//		}
 	}
 
 	public String getStatusId() {
@@ -178,19 +160,5 @@ public class Application extends CustomJpaObject implements Serializable {
 		this.sources = sources;
 	}
 	
-	// Convenience Methods
-//	public static List<Application> getApplications() {
-//		if (Application.applications == null) {
-//			Application.applications = new ArrayList<Application>();
-//		}
-//		return Application.applications;
-//	}
-//	
-//	private static void addApplication(Application application) {
-//		if (Application.applications == null) {
-//			Application.applications = new ArrayList<Application>();
-//		}
-//		Application.applications.add(application);
-//	}
 
 }

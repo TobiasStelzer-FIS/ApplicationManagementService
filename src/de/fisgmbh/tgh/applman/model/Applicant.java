@@ -28,7 +28,6 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 public class Applicant extends CustomJpaObject implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-//	private static List<Applicant> applicants;
 	
 	@Id
 	@TableGenerator(name = "ApplicantGenerator", table = "APPLMAN_ID_GENERATOR", pkColumnName = "GENERATOR_NAME", valueColumnName = "GENERATOR_VALUE", pkColumnValue = "Applicant", initialValue = 1, allocationSize = 1000)
@@ -72,16 +71,13 @@ public class Applicant extends CustomJpaObject implements Serializable {
 	@Column(name="EMAIL", length=80, nullable=true)
 	private String email;
 	
-	@OneToMany(mappedBy="applicant", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-	@JoinColumn(updatable = false, insertable = false)
+	@OneToMany(mappedBy="applicant", fetch=FetchType.EAGER, cascade=CascadeType.ALL, targetEntity=Application.class)
 	private List<Application> applications;
 	
 	public Applicant() {
 		super();
 		
 		applications = new ArrayList<Application>();
-		
-//		Applicant.addApplicant(this);
 	}
 
 	public String getApplicantId() {
@@ -193,25 +189,18 @@ public class Applicant extends CustomJpaObject implements Serializable {
 	}
 
 	public void setApplications(List<Application> applications) {
+		for (Application application : applications) {
+			if (application.getApplicant() == null) {
+				application.setApplicant(this);
+			}
+		}
 		this.applications = applications;
 	}
 	
 	// Convenience Methods
 	public void addApplication(Application application) {
-		applications.add(application);
+		if (!applications.contains(application))
+			applications.add(application);
 	}
 	
-//	public static List<Applicant> getApplicants() {
-//		if (Applicant.applicants == null) {
-//			Applicant.applicants = new ArrayList<Applicant>();
-//		}
-//		return Applicant.applicants;
-//	}
-//
-//	private static void addApplicant(Applicant applicant) {
-//		if (Applicant.applicants == null) {
-//			Applicant.applicants = new ArrayList<Applicant>();
-//		}
-//		Applicant.applicants.add(applicant);
-//	}
 }
