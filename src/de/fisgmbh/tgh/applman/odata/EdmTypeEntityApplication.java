@@ -12,8 +12,8 @@ public class EdmTypeEntityApplication extends EdmTypeEntityJPAStandard {
 		customPropertyNames = new HashMap<>();
 		customPropertyNames.put("CommentDetails", "Comments");
 		customPropertyNames.put("DocumentDetails", "Documents");
-		customPropertyNames.put("LinkPositionApplicationDetails", "Positions");
-		customPropertyNames.put("SourcesDetails", "Sources");
+		customPropertyNames.put("PositionDetails", "Positions");
+		customPropertyNames.put("SourceDetails", "Sources");
 	}
 	
 	public EdmTypeEntityApplication() {

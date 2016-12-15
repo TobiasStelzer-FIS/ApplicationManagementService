@@ -10,8 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -35,14 +34,13 @@ public class Position extends CustomJpaObject implements Serializable {
 	@Column(name="NAME", nullable=false, length=150)
 	private String name;
 
-	@OneToMany(mappedBy="position")
-	@JoinColumn(updatable = false, insertable = false)
-	private List<LinkPositionApplication> applications;
+	@ManyToMany(mappedBy="positions", targetEntity=Application.class)
+	private List<Application> applications;
 	
 	public Position() {
 		super();
 		
-		applications = new ArrayList<LinkPositionApplication>();
+		applications = new ArrayList<Application>();
 	}
 
 	public String getPositionId() {
@@ -61,12 +59,21 @@ public class Position extends CustomJpaObject implements Serializable {
 		this.name = name;
 	}
 
-	public List<LinkPositionApplication> getApplications() {
+	public List<Application> getApplications() {
 		return applications;
 	}
 
-	public void setApplications(List<LinkPositionApplication> applications) {
+	public void setApplications(List<Application> applications) {
 		this.applications = applications;
+		for (Application application : applications) {
+			application.addPosition(this);
+		}
 	}
 	
+	// Convenience Methods
+	public void addApplication(Application application) {
+		if (!applications.contains(application)) {
+			applications.add(application);
+		}
+	}
 }

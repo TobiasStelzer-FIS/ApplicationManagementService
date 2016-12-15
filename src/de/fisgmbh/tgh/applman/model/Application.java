@@ -14,67 +14,73 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.UniqueConstraint;
 
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 @Entity
-@Table(name="APPLICATION")
+@Table(name = "APPLICATION")
 @Multitenant
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", discriminatorType = DiscriminatorType.STRING, length = 36)
 public class Application extends CustomJpaObject implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@TableGenerator(name = "ApplicationGenerator", table = "APPLMAN_ID_GENERATOR", pkColumnName = "GENERATOR_NAME", valueColumnName = "GENERATOR_VALUE", pkColumnValue = "Application", initialValue = 1, allocationSize = 1000)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "ApplicationGenerator")
-	@Column(name="APPLICATION_ID", nullable=false, length=10)
+	@Column(name = "APPLICATION_ID", nullable = false, length = 10)
 	private String applicationId;
 
-//	@Column(name="APPLICANT_ID", length=10, nullable=false)
-//	private String applicantId;
-
-	@Column(name="STATUS_ID", length=10, nullable=true)
+	@Column(name = "STATUS_ID", length = 10, nullable = true)
 	private String statusId;
-	
-	@Column(name="ENTERED_BY", length=100, nullable=false)
+
+	@Column(name = "ENTERED_BY", length = 100, nullable = false)
 	private String enteredBy;
-	
-	@Column(name="ENTERED_ON", nullable=false)
+
+	@Column(name = "ENTERED_ON", nullable = false)
 	private Date enteredOn;
-	
-	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL, targetEntity=Applicant.class)
-	@JoinColumn(name = "APPLICANT_ID", referencedColumnName = "APPLICANT_ID")
+
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Applicant.class)
+	@JoinColumn(name = "APPLICANT_ID", referencedColumnName = "APPLICANT_ID", nullable = false)
 	private Applicant applicant;
-	
-	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "STATUS_ID", referencedColumnName = "STATUS_ID", updatable = false, insertable = false)
 	private Status status;
-	
-	@OneToMany(mappedBy="application", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+
+	@OneToMany(mappedBy = "application", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Comment> comments;
-	
-	@OneToMany(mappedBy="application", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+
+	@OneToMany(mappedBy = "application", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Document> documents;
-		
-	@OneToMany(mappedBy="application", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-	@JoinColumn(updatable = false, insertable = false)
-	private List<LinkPositionApplication> positions;
-	
-	@OneToMany(mappedBy="application", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-	@JoinColumn(updatable = false, insertable = false)
-	private List<LinkSourceApplication> sources;
-	
+
+	@ManyToMany(targetEntity = Position.class, cascade = CascadeType.ALL)
+	@JoinTable(name = "LINK_APPLICATION_POSITION", joinColumns = {
+			@JoinColumn(name = "APPLICATION_ID") }, inverseJoinColumns = {
+					@JoinColumn(name = "POSITION_ID") }, uniqueConstraints = {
+							@UniqueConstraint(columnNames = { "APPLICATION_ID", "POSITION_ID" }) })
+	private List<Position> positions;
+
+	@ManyToMany(targetEntity = Source.class, cascade = CascadeType.ALL)
+	@JoinTable(name = "LINK_APPLICATION_SOURCE", joinColumns = {
+			@JoinColumn(name = "APPLICATION_ID") }, inverseJoinColumns = {
+					@JoinColumn(name = "SOURCE_ID") }, uniqueConstraints = {
+							@UniqueConstraint(columnNames = { "APPLICATION_ID", "SOURCE_ID" }) })
+	private List<Source> sources;
+
 	public Application() {
 		super();
-		
-		positions = new ArrayList<LinkPositionApplication>();
-		sources = new ArrayList<LinkSourceApplication>();
+
+		positions = new ArrayList<Position>();
+		sources = new ArrayList<Source>();
 		comments = new ArrayList<Comment>();
 		documents = new ArrayList<Document>();
 	}
@@ -144,21 +150,38 @@ public class Application extends CustomJpaObject implements Serializable {
 		this.documents = documents;
 	}
 
-	public List<LinkPositionApplication> getPositions() {
+	public List<Position> getPositions() {
 		return positions;
 	}
 
-	public void setPositions(List<LinkPositionApplication> positions) {
+	public void setPositions(List<Position> positions) {
 		this.positions = positions;
+		for (Position position : positions) {
+			position.addApplication(this);
+		}
 	}
 
-	public List<LinkSourceApplication> getSources() {
+	public List<Source> getSources() {
 		return sources;
 	}
 
-	public void setSources(List<LinkSourceApplication> sources) {
+	public void setSources(List<Source> sources) {
 		this.sources = sources;
+		for (Source source : sources) {
+			source.addApplication(this);
+		}
 	}
 	
-
+	// Convenience Methods	
+	public void addSource(Source source) {
+		if (!sources.contains(source)) {
+			sources.add(source);
+		}
+	}
+	
+	public void addPosition(Position position) {
+		if (!positions.contains(position)) {
+			positions.add(position);
+		}
+	}
 }
