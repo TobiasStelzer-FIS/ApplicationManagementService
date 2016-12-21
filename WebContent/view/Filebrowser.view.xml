@@ -1,0 +1,49 @@
+<mvc:View xmlns:html="http://www.w3.org/1999/xhtml" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="de.fisgmbh.tgh.applman.controller.Filebrowser">
+	<App>
+		<pages>
+			<Page title="Filebrowser for Document Service">
+				<content>
+					<VBox direction="Column" id="vbox0" justifyContent="Center" width="100%">
+						<items>
+							<Link id="label3" text="Back to root" press="onBackToRoot" textAlign="Center" width="100%"/>
+						</items>
+					</VBox>
+					<Table id="table0" items="{/Objects}" noDataText="No data" mode="SingleSelectMaster" itemPress="onItemPress">
+						<items>
+							<ColumnListItem type="Active" counter="0" id="item1">
+								<cells>
+									<Text id="text5" maxLines="0" text="{Name}"/>
+									<Text id="text6" maxLines="0" text="{Type}"/>
+									<Text id="text7" maxLines="0" text="{Filetype}"/>
+									<Text id="text8" maxLines="0" text="{Size}"/>
+								</cells>
+							</ColumnListItem>
+						</items>
+						<columns>
+							<Column id="column0">
+								<header>
+									<Label id="label0" text="Name"/>
+								</header>
+							</Column>
+							<Column id="column1">
+								<header>
+									<Label id="label1" text="Type"/>
+								</header>
+							</Column>
+							<Column id="column2">
+								<header>
+									<Label id="label2" text="Filetype"/>
+								</header>
+							</Column>
+							<Column id="column3">
+								<header>
+									<Label text="Size"/>
+								</header>
+							</Column>
+						</columns>
+					</Table>
+				</content>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>

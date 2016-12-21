@@ -59,6 +59,9 @@ public class Status extends CustomJpaObject implements Serializable {
 
 	public void setApplications(List<Application> applications) {
 		this.applications = applications;
+		for (Application application : applications) {
+			application.setStatus(this);
+		}
 	}
 	
 	

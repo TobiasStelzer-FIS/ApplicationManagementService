@@ -10,21 +10,24 @@
 	<login-config>
 		<auth-method>FORM</auth-method>
 	</login-config>
-<!--
 	<security-constraint>
 		<web-resource-collection>
-			<web-resource-name>OData Service</web-resource-name>
-			<url-pattern>/odata.srv/*</url-pattern>
+			<web-resource-name>Protected Area</web-resource-name>
+			<url-pattern>/index.html</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
-			<role-name>Manager</role-name>
+			<role-name>Everyone</role-name>
 		</auth-constraint>
 	</security-constraint>
 	<security-role>
-		<description>Manager</description>
-		<role-name>Manager</role-name>
+		<description>All SAP HANA Cloud Platform users</description>
+		<role-name>Everyone</role-name>
 	</security-role>
--->
+	<!-- <security-constraint> <web-resource-collection> <web-resource-name>OData 
+		Service</web-resource-name> <url-pattern>/odata.srv/*</url-pattern> </web-resource-collection> 
+		<auth-constraint> <role-name>Manager</role-name> </auth-constraint> </security-constraint> 
+		<security-role> <description>Manager</description> <role-name>Manager</role-name> 
+		</security-role> -->
 	<servlet>
 		<servlet-name>JPARefScenarioServlet</servlet-name>
 		<servlet-class>org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet</servlet-class>
@@ -55,6 +58,43 @@
 		<servlet-name>JPARefScenarioServlet</servlet-name>
 		<url-pattern>/odata.srv/*</url-pattern>
 	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>PictureUploadServlet</servlet-name>
+		<servlet-class>de.fisgmbh.tgh.applman.documentservice.PictureUploadServlet</servlet-class>
+		<multipart-config>
+			<location>/tmp</location>
+			<max-file-size>5242880</max-file-size><!--5MB -->
+			<max-request-size>20971520</max-request-size><!--20MB -->
+			<file-size-threshold>0</file-size-threshold>
+		</multipart-config>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>PictureUploadServlet</servlet-name>
+		<url-pattern>/pictureupload</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>PictureDownloadServlet</servlet-name>
+		<servlet-class>de.fisgmbh.tgh.applman.documentservice.PictureDownloadServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>PictureDownloadServlet</servlet-name>
+		<url-pattern>/picture/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>FileBrowserServlet</servlet-name>
+		<servlet-class>de.fisgmbh.tgh.applman.documentservice.FileBrowserServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>FileBrowserServlet</servlet-name>
+		<url-pattern>/browse/*</url-pattern>
+	</servlet-mapping>
+
 	<resource-ref>
 		<res-ref-name>jdbc/DefaultDB</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>

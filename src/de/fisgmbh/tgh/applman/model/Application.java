@@ -39,9 +39,6 @@ public class Application extends CustomJpaObject implements Serializable {
 	@Column(name = "APPLICATION_ID", nullable = false, length = 10)
 	private String applicationId;
 
-	@Column(name = "STATUS_ID", length = 10, nullable = true)
-	private String statusId;
-
 	@Column(name = "ENTERED_BY", length = 100, nullable = false)
 	private String enteredBy;
 
@@ -53,7 +50,7 @@ public class Application extends CustomJpaObject implements Serializable {
 	private Applicant applicant;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "STATUS_ID", referencedColumnName = "STATUS_ID", updatable = false, insertable = false)
+	@JoinColumn(name = "STATUS_ID", referencedColumnName = "STATUS_ID")
 	private Status status;
 
 	@OneToMany(mappedBy = "application", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -91,14 +88,6 @@ public class Application extends CustomJpaObject implements Serializable {
 
 	public void setApplicationId(String applicationId) {
 		this.applicationId = applicationId;
-	}
-
-	public String getStatusId() {
-		return statusId;
-	}
-
-	public void setStatusId(String statusId) {
-		this.statusId = statusId;
 	}
 
 	public String getEnteredBy() {

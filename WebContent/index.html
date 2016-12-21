@@ -1,13 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>Application Management Service</title>
+	<meta charset="ISO-8859-1">
+	<title>Application Management Service</title>
+	
+	<script id="sap-ui-bootstrap" src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+		data-sap-ui-libs="sap.m" data-sap-ui-theme="sap_bluecrystal"
+		data-sap-ui-compatVersion="edge"
+		data-sap-ui-resourceroots='{"de.fisgmbh.tgh.applman": "./"}'>
+		
+	</script>
+	
+	<script>
+		sap.ui.getCore().attachInit(function() {
+			new sap.m.Shell({
+				app : new sap.ui.core.ComponentContainer({
+					height : "100%",
+					name : "de.fisgmbh.tgh.applman"
+				})
+			}).placeAt("content");
+		});
+	</script>
 </head>
-<body>
-	<h1>Application Management Service</h1>
-	<ul>
-		<li><a href="./odata.srv">OData Service</a></li>
-	</ul>
+<body class="sapUiBody" id="content">
 </body>
 </html>
