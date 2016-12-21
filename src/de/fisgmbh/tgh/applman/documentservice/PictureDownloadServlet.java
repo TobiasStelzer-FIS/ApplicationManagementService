@@ -82,7 +82,7 @@ public class PictureDownloadServlet extends HttpServlet {
 		
 		String applicationId = elements[1];
 		String filename = elements[2];
-		
+
 		try {
 			PictureAdapter pa = new PictureAdapter(filename, applicationId);
 			byte[] imageBytes = pa.getAsByteArray();

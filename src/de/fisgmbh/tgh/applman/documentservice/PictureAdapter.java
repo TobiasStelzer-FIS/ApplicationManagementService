@@ -159,7 +159,9 @@ public class PictureAdapter {
 		Map<String, Object> properties = new HashMap<String, Object>();
 		properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:document");
 		properties.put(PropertyIds.NAME, documentName);
-		properties.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, "image/png");
+		String documentExtension = documentName.substring(documentName.lastIndexOf('.') + 1);
+		String mimeType = "image/" + documentExtension;
+		properties.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, mimeType);
 		return properties;
 	}
 
