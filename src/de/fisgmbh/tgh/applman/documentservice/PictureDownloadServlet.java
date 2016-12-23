@@ -79,7 +79,6 @@ public class PictureDownloadServlet extends HttpServlet {
 
 		String path = request.getPathInfo();
 		String[] elements = path.split("/");
-		
 		String applicationId = elements[1];
 		String filename = elements[2];
 

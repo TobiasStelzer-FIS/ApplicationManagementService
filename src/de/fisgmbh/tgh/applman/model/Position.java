@@ -65,15 +65,5 @@ public class Position extends CustomJpaObject implements Serializable {
 
 	public void setApplications(List<Application> applications) {
 		this.applications = applications;
-		for (Application application : applications) {
-			application.addPosition(this);
-		}
-	}
-	
-	// Convenience Methods
-	public void addApplication(Application application) {
-		if (!applications.contains(application)) {
-			applications.add(application);
-		}
 	}
 }

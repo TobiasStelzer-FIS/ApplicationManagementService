@@ -2,27 +2,19 @@ package de.fisgmbh.tgh.applman.odata;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.olingo.odata2.api.edm.EdmEntitySet;
-import org.apache.olingo.odata2.api.edm.EdmException;
-import org.apache.olingo.odata2.api.edm.EdmFunctionImport;
-import org.apache.olingo.odata2.api.edm.EdmLiteral;
-import org.apache.olingo.odata2.api.edm.EdmLiteralKind;
-import org.apache.olingo.odata2.api.edm.EdmProperty;
-import org.apache.olingo.odata2.api.edm.EdmSimpleType;
-import org.apache.olingo.odata2.api.edm.EdmSimpleTypeException;
+import org.apache.olingo.odata2.api.batch.BatchHandler;
+import org.apache.olingo.odata2.api.batch.BatchRequestPart;
+import org.apache.olingo.odata2.api.batch.BatchResponsePart;
+import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
-import org.apache.olingo.odata2.api.ep.EntityProviderWriteProperties;
+import org.apache.olingo.odata2.api.ep.EntityProviderBatchProperties;
 import org.apache.olingo.odata2.api.exception.ODataException;
-import org.apache.olingo.odata2.api.exception.ODataNotFoundException;
-import org.apache.olingo.odata2.api.processor.ODataContext;
+import org.apache.olingo.odata2.api.processor.ODataRequest;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
-import org.apache.olingo.odata2.api.uri.KeyPredicate;
-import org.apache.olingo.odata2.api.uri.NavigationSegment;
+import org.apache.olingo.odata2.api.uri.PathInfo;
+import org.apache.olingo.odata2.api.uri.info.DeleteUriInfo;
 import org.apache.olingo.odata2.api.uri.info.GetEntityLinkUriInfo;
 import org.apache.olingo.odata2.api.uri.info.GetEntitySetLinksUriInfo;
 import org.apache.olingo.odata2.api.uri.info.PostUriInfo;
@@ -46,7 +38,9 @@ public class CustomODataJPAProcessor extends FisODataJPAProcessor {
 	public ODataResponse readEntityLink(final GetEntityLinkUriInfo uriParserResultView, final String contentType)
 			throws ODataException {
 		ODataResponse oDataResponse = null;
-
+		
+		oDataJPAContext.setODataContext(getContext());	// Important if batch-processing is used
+		
 		// TODO: Handle Permissions
 
 		Object jpaEntity = jpaProcessor.process(uriParserResultView);
@@ -58,31 +52,95 @@ public class CustomODataJPAProcessor extends FisODataJPAProcessor {
 	@Override
 	public ODataResponse readEntityLinks(final GetEntitySetLinksUriInfo uriParserResultView, final String contentType)
 			throws ODataException {
+		
 		ODataResponse oDataResponse = null;
 		
-		// TODO: Handle Permissions
+		oDataJPAContext.setODataContext(getContext());
 		
+		// TODO: Handle Permissions
+
 		List<Object> jpaEntities = jpaProcessor.process(uriParserResultView);
 		oDataResponse = responseBuilder.build(uriParserResultView, jpaEntities, contentType);
 
 		return oDataResponse;
 	}
-	
+
 	@Override
 	public ODataResponse createEntityLink(final PostUriInfo uriParserResultView, final InputStream content,
 			final String requestContentType, final String contentType) throws ODataException {
-
-		jpaProcessor.process(uriParserResultView, content, requestContentType, contentType);
-
-		return ODataResponse.newBuilder().build();
+		
+		ODataResponse response = ODataResponse.newBuilder().build();
+		
+		oDataJPAContext.setODataContext(getContext());
+		
+		try {
+			jpaProcessor.process(uriParserResultView, content, requestContentType, contentType);
+		} catch (Exception e) {
+			response = ODataResponse.newBuilder().status(HttpStatusCodes.INTERNAL_SERVER_ERROR).build();
+		}
+		return response;
 	}
 
 	@Override
 	public ODataResponse updateEntityLink(final PutMergePatchUriInfo uriParserResultView, final InputStream content,
 			final String requestContentType, final String contentType) throws ODataException {
 
-		jpaProcessor.process(uriParserResultView, content, requestContentType, contentType);
+		ODataResponse response = ODataResponse.newBuilder().build();
+		
+		oDataJPAContext.setODataContext(getContext());
+		
+		try {
+			jpaProcessor.process(uriParserResultView, content, requestContentType, contentType);
+		} catch (Exception e) {
+			response = ODataResponse.newBuilder().status(HttpStatusCodes.INTERNAL_SERVER_ERROR).build();
+		}
+		return response;
+	}
 
-		return ODataResponse.newBuilder().build();
+	@Override
+	public ODataResponse deleteEntityLink(final DeleteUriInfo uriInfo, final String contentType) throws ODataException {
+
+		ODataResponse response = ODataResponse.newBuilder().build();
+		
+		oDataJPAContext.setODataContext(getContext());
+		
+		try {
+			jpaProcessor.process(uriInfo, contentType);
+		} catch (Exception e) {
+			response = ODataResponse.newBuilder().status(HttpStatusCodes.INTERNAL_SERVER_ERROR).build();
+		}
+		return response;
+	}
+
+	@Override
+	public ODataResponse executeBatch(final BatchHandler handler, final String contentType, final InputStream content)
+			throws ODataException {
+		ODataResponse batchResponse;
+		List<BatchResponsePart> batchResponseParts = new ArrayList<BatchResponsePart>();
+		PathInfo pathInfo = getContext().getPathInfo();
+		EntityProviderBatchProperties batchProperties = EntityProviderBatchProperties.init().pathInfo(pathInfo).build();
+		List<BatchRequestPart> batchParts = EntityProvider.parseBatchRequest(contentType, content, batchProperties);
+		for (BatchRequestPart batchPart : batchParts) {
+			batchResponseParts.add(handler.handleBatchPart(batchPart));
+		}
+		batchResponse = EntityProvider.writeBatchResponse(batchResponseParts);
+		return batchResponse;
+	}
+
+	@Override
+	public BatchResponsePart executeChangeSet(final BatchHandler handler, final List<ODataRequest> requests)
+			throws ODataException {
+		List<ODataResponse> responses = new ArrayList<ODataResponse>();
+		for (ODataRequest request : requests) {
+			ODataResponse response = handler.handleRequest(request);
+			if (response.getStatus().getStatusCode() >= HttpStatusCodes.BAD_REQUEST.getStatusCode()) {
+				// Rollback
+				List<ODataResponse> errorResponses = new ArrayList<ODataResponse>(1);
+				errorResponses.add(response);
+				return BatchResponsePart.responses(errorResponses).changeSet(false).build();
+			}
+			responses.add(response);
+		}
+		return BatchResponsePart.responses(responses).changeSet(true).build();
 	}
 }

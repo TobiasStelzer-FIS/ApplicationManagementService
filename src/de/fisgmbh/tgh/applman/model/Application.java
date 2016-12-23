@@ -145,9 +145,6 @@ public class Application extends CustomJpaObject implements Serializable {
 
 	public void setPositions(List<Position> positions) {
 		this.positions = positions;
-		for (Position position : positions) {
-			position.addApplication(this);
-		}
 	}
 
 	public List<Source> getSources() {
@@ -156,21 +153,6 @@ public class Application extends CustomJpaObject implements Serializable {
 
 	public void setSources(List<Source> sources) {
 		this.sources = sources;
-		for (Source source : sources) {
-			source.addApplication(this);
-		}
 	}
 	
-	// Convenience Methods	
-	public void addSource(Source source) {
-		if (!sources.contains(source)) {
-			sources.add(source);
-		}
-	}
-	
-	public void addPosition(Position position) {
-		if (!positions.contains(position)) {
-			positions.add(position);
-		}
-	}
 }
