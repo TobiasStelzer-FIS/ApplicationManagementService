@@ -49,7 +49,7 @@ public class Application extends CustomJpaObject implements Serializable {
 	@JoinColumn(name = "APPLICANT_ID", referencedColumnName = "APPLICANT_ID", nullable = false)
 	private Applicant applicant;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "STATUS_ID", referencedColumnName = "STATUS_ID")
 	private Status status;
 
@@ -59,14 +59,14 @@ public class Application extends CustomJpaObject implements Serializable {
 	@OneToMany(mappedBy = "application", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Document> documents;
 
-	@ManyToMany(targetEntity = Position.class, cascade = CascadeType.ALL)
+	@ManyToMany(targetEntity = Position.class, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "LINK_APPLICATION_POSITION", joinColumns = {
 			@JoinColumn(name = "APPLICATION_ID") }, inverseJoinColumns = {
 					@JoinColumn(name = "POSITION_ID") }, uniqueConstraints = {
 							@UniqueConstraint(columnNames = { "APPLICATION_ID", "POSITION_ID" }) })
 	private List<Position> positions;
 
-	@ManyToMany(targetEntity = Source.class, cascade = CascadeType.ALL)
+	@ManyToMany(targetEntity = Source.class, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "LINK_APPLICATION_SOURCE", joinColumns = {
 			@JoinColumn(name = "APPLICATION_ID") }, inverseJoinColumns = {
 					@JoinColumn(name = "SOURCE_ID") }, uniqueConstraints = {

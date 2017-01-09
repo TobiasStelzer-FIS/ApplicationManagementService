@@ -24,9 +24,6 @@ public class CustomProcessingExtension extends FisJPAEdmExtension {
 		this.getEdmTypeFactory().registerEdmType(new EdmTypeEntityPosition());
 		this.getEdmTypeFactory().registerEdmType(new EdmTypeEntitySource());
 		this.getEdmTypeFactory().registerEdmType(new EdmTypeEntityStatus());
-		this.getEdmTypeFactory().registerEdmType(new EdmTypeEntityTest());
-		this.getEdmTypeFactory().registerEdmType(new EdmTypeEntityLinkPositionApplication());
-		this.getEdmTypeFactory().registerEdmType(new EdmTypeEntityLinkSourceApplication());
 	}
 
 	@Override
