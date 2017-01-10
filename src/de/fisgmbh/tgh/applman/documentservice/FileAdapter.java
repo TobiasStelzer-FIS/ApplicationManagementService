@@ -30,14 +30,14 @@ import de.fisgmbh.tgh.applman.util.IOUtils;
  * This class accesses functionalities of the document service provided by SAP
  * HANA Cloud Platform. It is used for storing and retrieving document content
  * in a folder-like structure. In the current application, the document service
- * is used for storing profile images.
+ * is used for storing applicant images and documents.
  *
  * @see <a href=
  *      "https://help.hana.ondemand.com/help/frameset.htm?e60b7e45bb57101487a881c7c5487778.html">SAP
  *      HANA Cloud Document Service</a>
  */
-public class PictureAdapter {
-	private static final Logger LOGGER = LoggerFactory.getLogger(PictureAdapter.class);
+public class FileAdapter {
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileAdapter.class);
 
 	private static Session cmisSession = null;
 	private static final String UNIQUE_NAME = "de.fisgmbh.tgh.applman";
@@ -46,7 +46,7 @@ public class PictureAdapter {
 	private String name;
 	private String containingFolder;
 
-	public PictureAdapter(String fileName, String containingFolder) {
+	public FileAdapter(String fileName, String containingFolder) {
 		this.name = fileName;
 		this.containingFolder = containingFolder;
 	}
@@ -159,18 +159,19 @@ public class PictureAdapter {
 		Map<String, Object> properties = new HashMap<String, Object>();
 		properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:document");
 		properties.put(PropertyIds.NAME, documentName);
-		String documentExtension = documentName.substring(documentName.lastIndexOf('.') + 1);
-		String mimeType = "image/" + documentExtension;
-		properties.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, mimeType);
+//		String documentExtension = documentName.substring(documentName.lastIndexOf('.') + 1);
+//		String mimeType = "image/" + documentExtension;
+//		properties.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, mimeType);
 		return properties;
 	}
 
 	private ContentStream getContentStream(Session session, byte[] documentContent) {
 		InputStream stream = new ByteArrayInputStream(documentContent);
 
-		String documentExtension = name.substring(name.lastIndexOf('.') + 1);
-		String mimeType = "image/" + documentExtension;
-
+//		String documentExtension = name.substring(name.lastIndexOf('.') + 1);
+//		String mimeType = "image/" + documentExtension;
+		String mimeType = "application/octet-stream";	// Unknown Mime-Type
+		
 		ContentStream contentStream = session.getObjectFactory().createContentStream(name, documentContent.length,
 				mimeType, stream);
 

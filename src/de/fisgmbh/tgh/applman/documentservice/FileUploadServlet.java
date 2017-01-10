@@ -42,7 +42,7 @@ import de.fisgmbh.tgh.applman.util.IOUtils;
 /**
  * Servlet implementation class HelloWorldServlet
  */
-public class PictureUploadServlet extends HttpServlet {
+public class FileUploadServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
@@ -59,7 +59,7 @@ public class PictureUploadServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public PictureUploadServlet() {
+	public FileUploadServlet() {
 		super();
 	}
 
@@ -116,10 +116,18 @@ public class PictureUploadServlet extends HttpServlet {
 	private void handleRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
+		String type;
 		Part part = request.getPart("pictureUploader-data");
-		if (part == null) {
-			String error = "Could not retrieve the ApplicationId! Part is null.";
-			throw new RuntimeException(error);
+		if (part != null) {
+			type = "picture";
+		} else {
+			part = request.getPart("documentUploader-data");
+			if (part != null) {
+				type = "document";
+			} else {
+				String error = "Could not retrieve the ApplicationId! Part is null.";
+				throw new RuntimeException(error);
+			}
 		}
 		
 		String applicationId = org.apache.cxf.helpers.IOUtils.toString(part.getInputStream());
@@ -128,16 +136,21 @@ public class PictureUploadServlet extends HttpServlet {
 		}
 		
 		InputStream partInputStream = null;
-		byte[] imageContent = null;
+		byte[] fileContent = null;
 
-		part = request.getPart("pictureUploader");
+		if (type.equals("picture")) {
+			part = request.getPart("pictureUploader");
+		} else if (type.equals("document")) {
+			part = request.getPart("documentUploader");
+		}
+		
 		if (part == null) {
 			String error = "Could not retrieve the uploaded content! Part is null.";
 			throw new RuntimeException(error);
 		}
 		try {
 			partInputStream = part.getInputStream();
-			imageContent = IOUtils.toByteArray(partInputStream);
+			fileContent = IOUtils.toByteArray(partInputStream);
 		} finally {
 			if (partInputStream != null) {
 				partInputStream.close();
@@ -151,25 +164,26 @@ public class PictureUploadServlet extends HttpServlet {
 			throw new RuntimeException(error);
 		}
 
-		if (imageContent.length > DEFAULT_MAX_SIZE) {
+		if (fileContent.length > DEFAULT_MAX_SIZE) {
 			throw new ServletException("Uploaded file is too large! Limit is 1 MB.");
 		}
 
-		if (!isImage(imageContent)) {
-			throw new ServletException(
-					"Uploaded file is not an image from the allowed range! (allowed file types: gif, png, jpg, bmp)");
+		if (type.equals("picture")) {
+			if (!isImage(fileContent)) {
+				throw new ServletException(
+						"Uploaded file is not an image from the allowed range! (allowed file types: gif, png, jpg, bmp)");
+			}
 		}
 
 		String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
 		String currentUserId = request.getRemoteUser();
-//		String newFileName = applicationId + "." + fileExtension;
-		
+
 		// Provide ApplicationId
 		// Return Folder for Application (Create it if necessary)
 		// Create Document with Picture data
 		// Save it in the folder
-		PictureAdapter fa = new PictureAdapter(fileName, applicationId);
-		fa.upload(imageContent);
+		FileAdapter fa = new FileAdapter(fileName, applicationId);
+		fa.upload(fileContent);
 	}
 
 	private String getFileName(Part part) {

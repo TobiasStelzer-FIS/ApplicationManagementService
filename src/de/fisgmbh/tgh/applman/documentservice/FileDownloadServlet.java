@@ -42,14 +42,14 @@ import de.fisgmbh.tgh.applman.util.IOUtils;
 /**
  * Servlet implementation class HelloWorldServlet
  */
-public class PictureDownloadServlet extends HttpServlet {
+public class FileDownloadServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public PictureDownloadServlet() {
+	public FileDownloadServlet() {
 		super();
 	}
 
@@ -83,12 +83,12 @@ public class PictureDownloadServlet extends HttpServlet {
 		String filename = elements[2];
 
 		try {
-			PictureAdapter pa = new PictureAdapter(filename, applicationId);
-			byte[] imageBytes = pa.getAsByteArray();
-			response.setHeader("Content-Type", "image/png");
-			response.setContentType("image/png");// or png or gif, etc
-			response.setContentLength(imageBytes.length);
-			response.getOutputStream().write(imageBytes);
+			FileAdapter fa = new FileAdapter(filename, applicationId);
+			byte[] fileBytes = fa.getAsByteArray();
+//			response.setHeader("Content-Type", "image/png");
+//			response.setContentType("image/png");// or png or gif, etc
+			response.setContentLength(fileBytes.length);
+			response.getOutputStream().write(fileBytes);
 		} catch (Exception e) {
 			throw new ServletException(e.getMessage());
 		}

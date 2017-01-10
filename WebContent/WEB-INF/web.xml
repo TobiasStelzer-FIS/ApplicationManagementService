@@ -60,8 +60,8 @@
 	</servlet-mapping>
 
 	<servlet>
-		<servlet-name>PictureUploadServlet</servlet-name>
-		<servlet-class>de.fisgmbh.tgh.applman.documentservice.PictureUploadServlet</servlet-class>
+		<servlet-name>FileUploadServlet</servlet-name>
+		<servlet-class>de.fisgmbh.tgh.applman.documentservice.FileUploadServlet</servlet-class>
 		<multipart-config>
 			<location>/tmp</location>
 			<max-file-size>5242880</max-file-size><!--5MB -->
@@ -71,18 +71,18 @@
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>PictureUploadServlet</servlet-name>
-		<url-pattern>/pictureupload</url-pattern>
+		<servlet-name>FileUploadServlet</servlet-name>
+		<url-pattern>/fileupload</url-pattern>
 	</servlet-mapping>
 
 	<servlet>
-		<servlet-name>PictureDownloadServlet</servlet-name>
-		<servlet-class>de.fisgmbh.tgh.applman.documentservice.PictureDownloadServlet</servlet-class>
+		<servlet-name>FileDownloadServlet</servlet-name>
+		<servlet-class>de.fisgmbh.tgh.applman.documentservice.FileDownloadServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>PictureDownloadServlet</servlet-name>
-		<url-pattern>/picture/*</url-pattern>
+		<servlet-name>FileDownloadServlet</servlet-name>
+		<url-pattern>/filedownload/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet>
