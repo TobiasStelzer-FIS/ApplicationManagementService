@@ -13,7 +13,7 @@
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>Protected Area</web-resource-name>
-			<url-pattern>/odata.srv/*</url-pattern>
+			<url-pattern>/index.html/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>Everyone</role-name>
@@ -23,11 +23,20 @@
 		<description>All SAP HANA Cloud Platform users</description>
 		<role-name>Everyone</role-name>
 	</security-role>
-	<!-- <security-constraint> <web-resource-collection> <web-resource-name>OData 
-		Service</web-resource-name> <url-pattern>/odata.srv/*</url-pattern> </web-resource-collection> 
-		<auth-constraint> <role-name>Manager</role-name> </auth-constraint> </security-constraint> 
-		<security-role> <description>Manager</description> <role-name>Manager</role-name> 
-		</security-role> -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>OData Service
+			</web-resource-name>
+			<url-pattern>/odata.srv/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Manager</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<security-role>
+		<description>Manager</description>
+		<role-name>Manager</role-name>
+	</security-role>
 	<servlet>
 		<servlet-name>JPARefScenarioServlet</servlet-name>
 		<servlet-class>org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet</servlet-class>

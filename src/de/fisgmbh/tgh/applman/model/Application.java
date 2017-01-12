@@ -91,7 +91,7 @@ public class Application extends CustomJpaObject implements Serializable {
 	}
 
 	public String getEnteredBy() {
-		return this.getSystem().getCreatedBy();
+		return this.getCreatedBy();
 	}
 
 	public void setEnteredBy(String enteredBy) {

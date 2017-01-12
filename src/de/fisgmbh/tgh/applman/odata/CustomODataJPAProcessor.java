@@ -1,9 +1,12 @@
 package de.fisgmbh.tgh.applman.odata;
 
 import java.io.InputStream;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.olingo.odata2.api.batch.BatchHandler;
 import org.apache.olingo.odata2.api.batch.BatchRequestPart;
@@ -31,6 +34,10 @@ import org.apache.olingo.odata2.api.uri.info.PostUriInfo;
 import org.apache.olingo.odata2.api.uri.info.PutMergePatchUriInfo;
 import org.apache.olingo.odata2.jpa.processor.api.ODataJPAContext;
 
+import com.sap.security.um.service.UserManagementAccessor;
+import com.sap.security.um.user.User;
+import com.sap.security.um.user.UserProvider;
+
 import de.fisgmbh.tgh.odata.FisODataJPAProcessor;
 
 /**
@@ -44,6 +51,27 @@ public class CustomODataJPAProcessor extends FisODataJPAProcessor {
 		super(oDataJPAContext);
 	}
 
+	@Override
+	public void addCustomData(Map<String, Object> map) {
+		User user;
+		HttpServletRequest request = (HttpServletRequest) oDataJPAContext.getODataContext().getParameter(ODataContext.HTTP_SERVLET_REQUEST_OBJECT);
+		Principal principal = request.getUserPrincipal();
+		String username = null;
+		if (principal != null) {
+			try {
+				UserProvider users = UserManagementAccessor.getUserProvider();
+				user = users.getUser(principal.getName());
+				username = user.getAttribute("firstname") + " " + user.getAttribute("lastname");
+			} catch (Exception e) {
+				
+			}
+		}
+		if (username == null) {
+			username = request.getRemoteUser();
+		}
+		map.put("CreatedBy", username);
+	}
+	
 	@Override
 	public ODataResponse readEntityLink(final GetEntityLinkUriInfo uriParserResultView, final String contentType)
 			throws ODataException {
