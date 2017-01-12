@@ -183,7 +183,15 @@ public class FileUploadServlet extends HttpServlet {
 		// Create Document with Picture data
 		// Save it in the folder
 		FileAdapter fa = new FileAdapter(fileName, applicationId);
-		fa.upload(fileContent);
+		try {
+			fa.upload(fileContent);
+		} catch (Exception e) {
+			response.setStatus(500);
+			throw new ServletException(e.getMessage());
+		}
+		response.setStatus(200);
+		response.getWriter().write("Success");
+		response.getWriter().flush();
 	}
 
 	private String getFileName(Part part) {

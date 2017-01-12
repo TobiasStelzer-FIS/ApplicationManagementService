@@ -30,7 +30,7 @@ public class Document extends CustomJpaObject implements Serializable {
 	@Column(name="DOCUMENT_ID", nullable=false, length=10)
 	private String documentId;
 	
-	@Column(name="DOCUMENTNAME", length=50)
+	@Column(name="DOCUMENTNAME", length=100)
 	private String documentname;
 	
 	@Column(name="DISPLAYTEXT", length=100)
@@ -56,8 +56,8 @@ public class Document extends CustomJpaObject implements Serializable {
 		return documentname;
 	}
 
-	public void setDocumentpath(String dokumentname) {
-		this.documentname = dokumentname;
+	public void setDocumentname(String documentname) {
+		this.documentname = documentname;
 	}
 
 	public String getDisplaytext() {
@@ -75,6 +75,5 @@ public class Document extends CustomJpaObject implements Serializable {
 	public void setApplication(Application application) {
 		this.application = application;
 	}
-	
 	
 }

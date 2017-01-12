@@ -39,10 +39,10 @@ public class Application extends CustomJpaObject implements Serializable {
 	@Column(name = "APPLICATION_ID", nullable = false, length = 10)
 	private String applicationId;
 
-	@Column(name = "ENTERED_BY", length = 100, nullable = false)
+	@Column(name = "ENTERED_BY", length = 100, insertable = false, updatable = false)
 	private String enteredBy;
 
-	@Column(name = "ENTERED_ON", nullable = false)
+	@Column(name = "ENTERED_ON", insertable = false, updatable = false)
 	private Date enteredOn;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Applicant.class)
@@ -91,7 +91,7 @@ public class Application extends CustomJpaObject implements Serializable {
 	}
 
 	public String getEnteredBy() {
-		return enteredBy;
+		return this.getSystem().getCreatedBy();
 	}
 
 	public void setEnteredBy(String enteredBy) {
@@ -99,7 +99,10 @@ public class Application extends CustomJpaObject implements Serializable {
 	}
 
 	public Date getEnteredOn() {
-		return enteredOn;
+		if (this.getSystem().getCreatedOn() == null) {
+			return null;
+		}
+		return new Date(this.getSystem().getCreatedOn().getTime());
 	}
 
 	public void setEnteredOn(Date enteredOn) {
@@ -111,7 +114,7 @@ public class Application extends CustomJpaObject implements Serializable {
 	}
 
 	public void setApplicant(Applicant applicant) {
-		applicant.addApplication(this);
+//		applicant.addApplication(this);
 		this.applicant = applicant;
 	}
 

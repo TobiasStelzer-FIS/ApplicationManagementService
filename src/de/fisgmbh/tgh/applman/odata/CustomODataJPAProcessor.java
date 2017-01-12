@@ -3,20 +3,30 @@ package de.fisgmbh.tgh.applman.odata;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.olingo.odata2.api.batch.BatchHandler;
 import org.apache.olingo.odata2.api.batch.BatchRequestPart;
 import org.apache.olingo.odata2.api.batch.BatchResponsePart;
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
+import org.apache.olingo.odata2.api.edm.EdmProperty;
+import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
 import org.apache.olingo.odata2.api.ep.EntityProviderBatchProperties;
+import org.apache.olingo.odata2.api.ep.EntityProviderException;
+import org.apache.olingo.odata2.api.ep.EntityProviderReadProperties;
+import org.apache.olingo.odata2.api.exception.ODataBadRequestException;
 import org.apache.olingo.odata2.api.exception.ODataException;
+import org.apache.olingo.odata2.api.exception.ODataNotFoundException;
+import org.apache.olingo.odata2.api.processor.ODataContext;
 import org.apache.olingo.odata2.api.processor.ODataRequest;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
 import org.apache.olingo.odata2.api.uri.PathInfo;
 import org.apache.olingo.odata2.api.uri.info.DeleteUriInfo;
+import org.apache.olingo.odata2.api.uri.info.GetComplexPropertyUriInfo;
 import org.apache.olingo.odata2.api.uri.info.GetEntityLinkUriInfo;
 import org.apache.olingo.odata2.api.uri.info.GetEntitySetLinksUriInfo;
+import org.apache.olingo.odata2.api.uri.info.GetSimplePropertyUriInfo;
 import org.apache.olingo.odata2.api.uri.info.PostUriInfo;
 import org.apache.olingo.odata2.api.uri.info.PutMergePatchUriInfo;
 import org.apache.olingo.odata2.jpa.processor.api.ODataJPAContext;
@@ -39,7 +49,11 @@ public class CustomODataJPAProcessor extends FisODataJPAProcessor {
 			throws ODataException {
 		ODataResponse oDataResponse = null;
 		
-		oDataJPAContext.setODataContext(getContext());	// Important if batch-processing is used
+		ODataContext ctx = getContext();
+		if (ctx.getBatchParentContext() != null) {
+			ctx = ctx.getBatchParentContext();
+		}
+		oDataJPAContext.setODataContext(ctx);	// Important if batch-processing is used
 		
 		// TODO: Handle Permissions
 
@@ -55,7 +69,11 @@ public class CustomODataJPAProcessor extends FisODataJPAProcessor {
 		
 		ODataResponse oDataResponse = null;
 		
-		oDataJPAContext.setODataContext(getContext());
+		ODataContext ctx = getContext();
+		if (ctx.getBatchParentContext() != null) {
+			ctx = ctx.getBatchParentContext();
+		}
+		oDataJPAContext.setODataContext(ctx);
 		
 		// TODO: Handle Permissions
 
@@ -71,7 +89,8 @@ public class CustomODataJPAProcessor extends FisODataJPAProcessor {
 		
 		ODataResponse response = ODataResponse.newBuilder().build();
 		
-		oDataJPAContext.setODataContext(getContext());
+		ODataContext ctx = getContext();
+		oDataJPAContext.setODataContext(ctx);
 		
 		try {
 			jpaProcessor.process(uriParserResultView, content, requestContentType, contentType);
@@ -87,7 +106,8 @@ public class CustomODataJPAProcessor extends FisODataJPAProcessor {
 
 		ODataResponse response = ODataResponse.newBuilder().build();
 		
-		oDataJPAContext.setODataContext(getContext());
+		ODataContext ctx = getContext();
+		oDataJPAContext.setODataContext(ctx);
 		
 		try {
 			jpaProcessor.process(uriParserResultView, content, requestContentType, contentType);
@@ -102,7 +122,11 @@ public class CustomODataJPAProcessor extends FisODataJPAProcessor {
 
 		ODataResponse response = ODataResponse.newBuilder().build();
 		
-		oDataJPAContext.setODataContext(getContext());
+		ODataContext ctx = getContext();
+		if (ctx.getBatchParentContext() != null) {
+			ctx = ctx.getBatchParentContext();
+		}
+		oDataJPAContext.setODataContext(ctx);
 		
 		try {
 			jpaProcessor.process(uriInfo, contentType);
@@ -143,4 +167,5 @@ public class CustomODataJPAProcessor extends FisODataJPAProcessor {
 		}
 		return BatchResponsePart.responses(responses).changeSet(true).build();
 	}
+	
 }

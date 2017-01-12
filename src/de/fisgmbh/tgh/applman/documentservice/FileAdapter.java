@@ -9,8 +9,10 @@ import java.util.Map;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
+import org.apache.chemistry.opencmis.client.api.ItemIterable;
 import org.apache.chemistry.opencmis.client.api.Session;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
@@ -60,12 +62,12 @@ public class FileAdapter {
 	 *            - the content of the uploaded document represented as a byte
 	 *            array
 	 */
-	public void upload(byte[] documentContent) {
+	public void upload(byte[] documentContent) throws Exception{
 
 		Session session = getCmisSession();
 		if (session == null) {
 			LOGGER.error("ECM not found, Session is null.");
-			return;
+			throw new Exception("Unable to open Session for the DocumentService.");
 		}
 
 		Document document = getDocument(session);
@@ -89,7 +91,17 @@ public class FileAdapter {
 		if (folder instanceof Folder) {
 			Map<String, Object> properties = getProperties(name);
 			ContentStream contentStream = getContentStream(session, documentContent);
-	
+			
+			ItemIterable<CmisObject> children = folder.getChildren();
+			CmisObject deleteThis = null;
+			for (CmisObject child : children) {
+				if (child.getName().equals(name)) {
+					deleteThis = child;
+				}
+			}
+			if (deleteThis != null) {
+				session.delete(deleteThis);
+			}
 			folder.createDocument(properties, contentStream, VersioningState.NONE);
 		}
 	}
@@ -102,13 +114,13 @@ public class FileAdapter {
 	 * @return the document content as a byte array
 	 * @throws IOException
 	 */
-	public byte[] getAsByteArray() throws IOException {
+	public byte[] getAsByteArray() throws IOException, Exception {
 		InputStream stream = null;
 
 		Session session = getCmisSession();
 		if (session == null) {
 			LOGGER.error("ECM not found, Session is null.");
-			return null;
+			throw new Exception("Unable to open Session for the DocumentService.");
 		}
 
 		Document document = getDocument(session);
