@@ -46,7 +46,7 @@ public class FileUploadServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private final static int DEFAULT_MAX_SIZE = 1000 * 1024;
+	private final static int DEFAULT_MAX_SIZE = 50 * 1024 * 1024;	// 50 MB
 	private static final String HEADER_OF_BMP_FILE = "424d";
 	private static final String HEADER_OF_JPEG_FILE = "ffffffffffffffd8ffffffffffffffe0";
 	private static final String HEADER_OF_GIF_FILE = "47494638";

@@ -25,8 +25,7 @@
 	</security-role>
 	<security-constraint>
 		<web-resource-collection>
-			<web-resource-name>OData Service
-			</web-resource-name>
+			<web-resource-name>OData Service</web-resource-name>
 			<url-pattern>/odata.srv/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>

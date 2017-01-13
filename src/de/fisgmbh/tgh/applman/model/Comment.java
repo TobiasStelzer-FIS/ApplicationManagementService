@@ -34,7 +34,7 @@ public class Comment extends CustomJpaObject implements Serializable {
 	@Column(name="TIMESTAMP", nullable=false)
 	private Timestamp timestamp;
 	
-	@Column(name="NAME", length=100, nullable=false)
+	@Column(name="NAME", length = 100, insertable = false, updatable = false)
 	private String name;
 	
 	@Column(name="SUBJECT", length=30, nullable=false)
@@ -68,7 +68,7 @@ public class Comment extends CustomJpaObject implements Serializable {
 	}
 
 	public String getName() {
-		return name;
+		return this.getCreatedBy();
 	}
 
 	public void setName(String name) {
